@@ -1,0 +1,54 @@
+# Claude Code
+.claude/
+CLAUDE.md
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+target/
+
+# IDE
+.vscode/
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment & secrets
+*.env
+application.properties
+
+# Logs
+*.log
+
+# Archives & documents
+*.7z
+*.rar
+*.zip
+*.pdf
+
+# Compiled Java
+*.class
+
+# Maven wrapper (optional, keep .mvn/wrapper)
+!.mvn/wrapper/maven-wrapper.jar
+
+# Algorithm runtime data
+SERVER/server/algorithm/data/
+
+# Snapshots (runtime generated)
+SERVER/server/snapshots/
+
+# JAR (large binary)
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+
+# Frontend build (already in frontend/)
+frontend/

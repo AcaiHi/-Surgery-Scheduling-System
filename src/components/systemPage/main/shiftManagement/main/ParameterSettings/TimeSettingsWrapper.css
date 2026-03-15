@@ -1,0 +1,93 @@
+/* 外層 */
+.settings-wrapper { width: min(1280px, 96vw); margin: 0 auto; }
+
+/* 卡片 */
+.param-card {
+  
+  margin-top: 16px;
+  width: 100%;
+  margin: 12px auto;
+  padding: 20px 24px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+/* 標頭 */
+.param-header { 
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    gap: 12px; 
+    margin-bottom: 8px;
+}
+.param-title { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: .2px; }
+
+/* 訊息 */
+.param-state { padding: 10px 12px; border-radius: 8px; background: #f9fafb; border: 1px solid #e5e7eb; margin-bottom: 10px; }
+.param-state2 { padding: 5px 5px; border-radius: 8px; background: #f5eeffc9; border: 1px solid #ffffff; margin-bottom: 10px; }
+.param-state3 { padding: 5px 5px; border-radius: 8px; background: #eefff1c9; border: 1px solid #ffffff; margin-bottom: 10px; }
+
+.param-error { background: #fff1f2; border-color: #fecaca; color: #b91c1c; }
+.param-ok { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+
+/* 垂直四欄 */
+.ts-stack { display: grid; grid-template-columns: 1fr; gap: 14px; margin-bottom: 8px; }
+.ts-item { display: flex; flex-direction: column; gap: 6px; }
+.ts-item label { font-size: 18px; color: #111827; font-weight: 700; }
+
+/* 純輸入 */
+.plain-time, .plain-number {
+  height: 42px;
+  padding: 8px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  outline: none;
+  background: #ffffff;
+  color: #111827;
+  font-size: 18px;
+  letter-spacing: .3px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+}
+.plain-number::-webkit-outer-spin-button,
+.plain-number::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.plain-number { -moz-appearance: textfield; }
+
+.plain-time:focus, .plain-number:focus { border-color: #60a5fa; box-shadow: 0 0 0 3px rgba(59,130,246,.15); }
+.plain-time.invalid { border-color: #ef4444; background: #fff7f7; }
+.error-hint { font-size: 12px; color: #b91c1c; }
+
+/* 底部按鈕列（只在變更時顯示） */
+.form-actions-bottom {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #e5e7eb;
+}
+.param-btn {
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 800;
+  letter-spacing: .3px;
+}
+.param-btn.confirm { background: #10b981; }  /* 綠：確認 */
+.param-btn.confirm:disabled { opacity: .5; cursor: not-allowed; }
+.param-btn.confirm:not(:disabled):hover { filter: brightness(0.95); }
+.param-btn.cancel { background: #ef4444; }   /* 紅：取消 */
+.param-btn.cancel:hover { filter: brightness(0.95); }
+
+.actions-hint { font-size: 12px; color: #6b7280; }
+
+/* 手機 */
+@media (max-width: 720px) {
+  .plain-time, .plain-number { height: 44px; font-size: 16px; }
+}

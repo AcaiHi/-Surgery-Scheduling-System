@@ -1,0 +1,274 @@
+.system-wrapper {
+    /* width: 100vw; */
+    /* height: 100vh; */
+    display: flex;
+    flex-direction: column;
+}
+
+/*-----here is header---*/
+
+.header-wrapper {
+    width: 100vw;
+    height: 10%;
+    background-color: whitesmoke;
+    border-bottom: 1px rgb(180, 180, 180) solid;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.user-wrapper {
+    position: relative; 
+    height: 100%;
+    width: 15%;
+
+    margin-right: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.user {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 32px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.user:hover {
+    background-color: rgb(230, 230, 230);
+}
+
+.user.show {
+    background-color: rgb(230, 230, 230);
+}
+
+.user.show:hover {
+    background-color: rgb(220, 220, 220);
+}
+
+.user-name {
+    margin-left: 10px;
+}
+
+
+.user-list {
+    position: absolute;
+    top: 100%;
+
+    width: 100%;
+    background-color: #e6e6e6;
+    border-left: 1px rgb(180, 180, 180) solid;
+    border-right: 1px rgb(180, 180, 180) solid;
+    border-bottom: 1px rgb(180, 180, 180) solid;
+
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: all 0.1s ease;
+    pointer-events: none;
+}
+
+.user-list.show {
+    transform: scaleY(1);
+    pointer-events: auto;
+}
+
+.user-list > button {
+    
+    background: none;
+    border: none;
+    background-color: rgb(255, 255, 255);
+    border: 2px rgb(63, 63, 63) solid;
+    border-radius: 50px;
+    font-size: 20px;
+
+    padding: 10px;
+    margin: 15px;
+    margin-left: 50px;
+    margin-right: 50px;
+    transition: all 0.3s ease;
+
+    cursor: pointer;
+}
+
+.user-list > button:hover {
+    background-color: rgb(200, 200, 200);
+    transform: scale(1.05);
+}
+
+.header-button {
+    background: none;
+    border: none;
+
+    margin: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: white;
+    box-shadow: 0 0 3px 1px gray;
+    border-radius: 50px;
+
+    font-size: 25px;
+    font-weight: bold;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.front-page-button {
+    position: relative;
+    bottom: 5px;
+
+    background: none;
+    border: none;
+
+    margin: 20px;
+    margin-right: auto;
+    padding: 30px;
+    padding-left: 40px;
+    padding-right: 40px;
+    background-color: white;
+    box-shadow: 0 0 3px 1px gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 25px;
+    font-weight: bold;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.header-wrapper > button:hover {
+    background-color: rgb(230, 230, 230);
+    transform: scale(1.05);
+    /*box-shadow: 0 0 10px 1px gray;*/
+}
+
+/*-----here is main-----*/
+
+.main-wrapper {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-profile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    bottom: 17%;
+    height: 60%;
+    width: 100%;
+    
+}
+
+.user-profile > h1 {
+    font-size: 48px;
+}
+
+.user-info {
+    margin-top: 20px;
+    font-size: 32px;
+
+    width: 40%;
+
+    display: flex;
+    justify-content: center;
+
+    border-width: 100%;
+    border-bottom: 2px black solid;
+    padding-bottom: 10px;
+}
+
+.user-password-input {
+    background: none;
+    border: none;
+    outline: none;
+
+    margin-top: 20px;
+    font-size: 32px;
+    text-align: center;
+
+    width: 40%;
+
+    border-width: 100%;
+    border-bottom: 2px black solid;
+    padding-bottom: 10px;
+}
+
+.user-profile-button {
+    background: none;
+    border: none;
+
+    margin: 20px;
+    padding: 10px;
+    padding-left: 40px;
+    padding-right: 40px;
+    background-color: white;
+    border: 2px rgb(63, 63, 63) solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 25px;
+    font-weight: bold;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-profile-button:hover {
+    background-color: rgb(230, 230, 230);
+    transform: scale(1.05);
+    /*box-shadow: 0 0 10px 1px gray;*/
+}
+
+.user-cancel {
+    background-color: rgb(220, 220, 220);
+}
+
+.user-cancel:hover {
+    background-color: rgb(200, 200, 200);
+}
+
+.change-button {
+    display: flex;
+    gap: 20px;
+}
+
+.user-profile > .error {
+    position: relative;
+    left: 17%;
+    color: red;
+    font-size: 16px;
+    margin-top: 5px;
+}
+.dropdown-menu {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+  }
+  
+  .group:hover .dropdown-menu,
+  .dropdown-menu:hover {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }

@@ -1,0 +1,145 @@
+/* src/components/systemPage/main/SchedulePreview/SchedulePreviewGantt.css */
+
+/* =========================================================
+   1) 橫向卷軸(自訂 slider) → 做到「跟最下方原生卷軸一樣」
+   ========================================================= */
+.gantt-slider-bar {
+  padding: 8px 16px;
+  background: #ffffff;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Track(底色) */
+.gantt-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 12px;                 /* 跟原生 scrollbar 視覺接近 */
+  border-radius: 6px;
+  background: #f1f5f9;          /* 跟 .gantt-scroll-container::-webkit-scrollbar-track 同色 */
+  outline: none;
+}
+
+/* Chrome / Edge / Safari：thumb(拖曳塊) → 模仿原生 scrollbar thumb */
+.gantt-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 84px;                  /* 你想更像原生可調大/小 */
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #94a3b8, #64748b);
+  border: 2px solid #f1f5f9;    /* 跟原生 thumb 邊框一致 */
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.gantt-slider::-webkit-slider-thumb:hover {
+  background: linear-gradient(180deg, #64748b, #475569);
+}
+
+.gantt-slider::-webkit-slider-thumb:active {
+  background: linear-gradient(180deg, #475569, #334155);
+}
+
+/* Firefox：thumb */
+.gantt-slider::-moz-range-thumb {
+  width: 84px;
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #94a3b8, #64748b);
+  border: 2px solid #f1f5f9;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.gantt-slider::-moz-range-thumb:hover {
+  background: linear-gradient(180deg, #64748b, #475569);
+}
+
+.gantt-slider::-moz-range-thumb:active {
+  background: linear-gradient(180deg, #475569, #334155);
+}
+
+/* Firefox track */
+.gantt-slider::-moz-range-track {
+  height: 12px;
+  border-radius: 6px;
+  background: #f1f5f9;
+}
+
+/* =========================================================
+   2) Gantt body 原生卷軸(你最下方那條就是它) → 保留
+   ========================================================= */
+.gantt-scroll-container::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.gantt-scroll-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 6px;
+}
+
+.gantt-scroll-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #94a3b8, #64748b);
+  border-radius: 6px;
+  border: 2px solid #f1f5f9;
+  transition: background 0.2s;
+}
+
+.gantt-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #64748b, #475569);
+}
+
+.gantt-scroll-container::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(180deg, #475569, #334155);
+}
+
+/* Firefox 滾動條樣式 */
+.gantt-scroll-container {
+  scrollbar-width: thin;
+  scrollbar-color: #94a3b8 #f1f5f9;
+}
+
+/* =========================================================
+   3) Time Scale：隱藏自身滾動條(只同步，不顯示)
+   ========================================================= */
+.gantt-time-scale::-webkit-scrollbar {
+  display: none;
+}
+.gantt-time-scale {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* =========================================================
+   4) 拖放視覺回饋(保留你的原設定)
+   ========================================================= */
+.drop-conflict {
+  background: #fca5a5 !important;
+  border: 3px dashed #dc2626 !important;
+  box-shadow: 0 15px 30px rgba(220, 38, 38, 0.4) !important;
+}
+
+.drop-allowed {
+  border: 3px dashed #22c55e !important;
+  box-shadow: 0 15px 30px rgba(34, 197, 94, 0.4) !important;
+}
+
+.conflict-indicator {
+  position: absolute;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.conflict-indicator-line {
+  background: repeating-linear-gradient(
+    45deg,
+    #dc2626,
+    #dc2626 10px,
+    #fca5a5 10px,
+    #fca5a5 20px
+  );
+  opacity: 0.7;
+}

@@ -1,0 +1,321 @@
+/***** Layer 1. Layout base *****/
+.home-gantt-wrapper {
+  --tabs-h: 44px;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+ background-color: #ffffff;
+  /* gap: 10px; */
+}
+
+
+.gantt-wrapper {
+  --timeline-width: 2400px;
+  width: 98%;
+  height: auto;
+  background-color: white;
+  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  isolation: isolate;
+}
+
+/***** Layer 2. Top tabs (left-aligned underline) *****/
+.tabs-bar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  padding: 0 12px;
+  height: var(--tabs-h);
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.tab {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 10px 6px 12px;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.tab:hover { color: #111827; }
+.tab:focus-visible { outline: 2px solid rgba(37, 99, 235, 0.35); outline-offset: 2px; }
+.tab.active { color: #1d4ed8; border-bottom-color: #1d4ed8; }
+
+/***** Layer 3. Slider (sits under tabs) *****/
+.gantt-slider-bar {
+  position: sticky;
+  top: var(--tabs-h);
+  z-index: 50;
+  padding: 0px 12px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #fff;
+}
+.gantt-slider {
+  --track-h: 4px; --thumb-w: 240px; --thumb-h: 8px;
+  --track: #e0e0e0; --fill: #e0e0e0;
+  display: block; width: 100%; height: max(var(--thumb-h), 24px);
+  -webkit-appearance: none; appearance: none; background: transparent;
+}
+.gantt-slider::-webkit-slider-runnable-track {
+  height: var(--track-h); border-radius: 999px;
+  background: linear-gradient(to right, var(--fill) 0 var(--percent), var(--track) var(--percent) 100%);
+}
+.gantt-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: var(--thumb-w); height: var(--thumb-h); border-radius: 2px; background: #5c5c5c;
+  cursor: pointer; margin-top: calc((var(--track-h) - var(--thumb-h)) / 2);
+}
+.gantt-slider:hover::-webkit-slider-thumb { background: #0b1220; }
+.gantt-slider:active::-webkit-slider-thumb { transform: scaleX(1.05); }
+.gantt-slider:focus-visible { outline: none; }
+.gantt-slider:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px rgba(26,115,232,0.3); }
+.gantt-slider:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px rgba(26,115,232,0.3); }
+
+/***** Layer 4. Time scale *****/
+.time-scale {
+  position: relative; display: flex; align-items: flex-end; gap: 0;
+  padding: 8px 0 6px; border-top: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb;
+  background: #fafafa; overflow-x: auto; white-space: nowrap; z-index: 1;
+  scrollbar-gutter: stable both-edges; overscroll-behavior-x: contain;
+}
+.time-scale-track { display: inline-flex; gap: 0; width: var(--timeline-width); }
+.tick { position: relative; width: 25px; height: 40px; flex: 0 0 25px; }
+.tick::after { content: ""; position: absolute; bottom: 0; width: 1px; height: 18px; background: #928787; transform: translateX(-50%); }
+.tick--hour::after { height: 24px; background: #111827; }
+.tick--midnight::after { background: #ef4444; }
+.tick-label {
+  position: absolute; bottom: 30px; transform: translateX(-50%);
+  font-size: 16px; line-height: 1; color: #374151; user-select: none; white-space: nowrap;
+}
+.tick--midnight .tick-label { color: #ef4444; }
+.tick--midnight ~ .tick .tick-label { color: #1e40af; font-weight: 600; opacity: 0.9; }
+
+/***** Layer 5. Action list *****/
+.action-list { 
+  display: flex; 
+  font-size: 1.2rem; 
+  padding-left: 15px; 
+  align-items: center;               /* 垂直置中即可 */
+  justify-content: flex-start;       /* 水平靠左 */
+  text-align: left;                  /* 明確靠左 */
+}
+.pin-icon{ width: 2rem; height: 2rem; color:#4b5563;}
+.pin-icon-active{ color:#dc2626;}
+.pin-text{ font-size:1rem; margin-left:0.25rem;}
+.pin-text-active{ color:#dc2626; }
+
+/***** Layer 6. Gantt table *****/
+.gantt-table { display: flex; flex-direction: column; }
+.gantt-row {
+  display: grid; height: auto; 
+  align-items: stretch;               /* ← 修正：避免把子元素在交叉軸置中 */
+  transition: background-color .2s ease, border-left-color .2s ease;
+  border-left: 4px solid transparent;
+}
+.gantt-table > .gantt-row { --row-bg: #ffffff; background: var(--row-bg); }
+.gantt-table > .gantt-row:nth-child(odd)  { --row-bg: #e1e1e1; }
+.gantt-table > .gantt-row:nth-child(even) { --row-bg: #ffffff; }
+.gantt-table > .gantt-row.pinned {
+  --row-bg: #f9b3b8d4; border-left-color: #ff5266; box-shadow: inset 0 0 0 1px rgba(244,63,94,0.08);
+}
+
+/* 房名專用（若你沒用 ActionList，就給 room-title 也左對齊） */
+.room-title {
+  padding: 6px 8px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;        /* 水平靠左 */
+  text-align: left;                   /* 文本靠左 */
+  width: 100%;
+}
+
+.surgery-items {
+  height: 60px; display: flex; flex-direction: row; align-items: stretch;
+}
+.gantt-surgery-item {
+  height: 100%; display: flex; align-items: stretch; border-radius: 10px;
+  overflow: hidden; box-shadow: 0 1px 3px rgba(0, 0, 0, 0); bottom: 5px;
+}
+/* === 全部手術與清潔區塊的共用設定 === */
+.surgery-time, .cleaning-time {
+  height: 100%;             /* 讓每個區塊撐滿父層的高度（通常代表整段時間格） */
+  flex: 0 0 auto;           /* 禁止被壓縮或自動放大，保持原始寬度 */
+  box-sizing: border-box;   /* 計算寬高時包含 padding 與 border，避免超出格線 */
+  
+}
+
+/* === 各狀態對應的顏色與字色設定 === */
+
+/* 正常手術狀態：採亮綠色背景 + 黑字
+   → 給人「順利進行中」的感覺，清晰且不刺眼 */
+.surgery-time.normal {
+  background-color: #00E676; /* 鮮亮綠，代表手術正常進行 */
+  color: #000000;            /* 黑字，與亮綠背景形成高對比 */
+  border-radius: 10px;                    /* 圓角 */
+}
+
+/* 加班手術狀態：採亮黃色背景 + 黑字
+   → 給人「警示但仍可接受」的視覺印象 */
+.surgery-time.overtime {
+  background-color: #FFD600; /* 鮮亮黃，明顯提醒但不危急 */
+  color: #000000;            /* 黑字在黃色底上非常清楚 */
+  border-radius: 10px;                    /* 圓角 */
+}
+
+/* 超時手術狀態：採強烈紅色背景 + 白字
+   → 立即吸睛，讓使用者注意「異常或危險狀況」 */
+.surgery-time.overlimit {
+  background-color: #FF1744; /* 鮮紅，代表超時或重大警示 */
+  color: #FFFFFF;            /* 白字在紅底上最清晰，不會被吃色 */
+  border-radius: 10px;                    /* 圓角 */
+}
+
+/* 清潔時段：採亮藍色背景 + 白字
+   → 給人冷靜、乾淨的印象，象徵手術間的整理或消毒階段 */
+.cleaning-time {
+  background-color: #1068ff; /* 鮮藍色，象徵清潔/維護狀態 */
+  color: #FFFFFF;            /* 白字對比強烈，易讀性高 */
+  border-radius: 10px;                    /* 圓角 */
+}
+
+
+
+
+
+
+.gantt-surgery-item { border-radius: 8px; overflow: hidden; }
+.surgery-time, .cleaning-time {
+  display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;
+}
+
+/* 滾動容器 */
+.gantt-scroll { position: relative; overflow-x: auto; overflow-y: visible; scrollbar-gutter: stable both-edges; z-index: 1; overscroll-behavior-x: contain; }
+.gantt-track { display: block; width: var(--timeline-width); }
+
+/***** Layer 7. Scrollbar visibility *****/
+.time-scale::-webkit-scrollbar { display: none; }
+.gantt-scroll::-webkit-scrollbar { display: none; }
+
+/***** Layer 8. Selection & grouping states *****/
+/* 選取框範圍用的半透明底 */
+.selection-box { background: rgba(59,130,246,0.05); }
+
+/* ===== 手術卡片：選取樣式（唯一版本） ===== */
+.gantt-surgery-item.selected .surgery-time {
+  background-color: #e7ceff !important;   /* 柔和紫底 */
+  color: #111 !important;                 /* 深灰字 */
+  border: 3px solid #a545ff !important;   /* 粗亮紫邊框 */
+  border-radius: 10px;                    /* 圓角 */
+  box-sizing: border-box;                 /* 邊框不撐大 */
+  outline: none;
+  box-shadow: none;
+}
+
+/* 外層容器在選取時：完全透明（無陰影） */
+.gantt-surgery-item.selected {
+  box-shadow: 0 0 0 0 rgba(0,0,0,0)!important;  
+  border-radius: 10px;                    /* 圓角 */
+}
+
+/* ===== 群組卡片：一般/選取 ===== */
+/* 一般「群組」外觀（未選取） */
+/* .gantt-surgery-item.is-group .surgery-time,
+.gantt-surgery-item.is-group {
+  background-color: #a545ff !important;
+  color: #ffffff !important;
+    border-radius: 10px;                    /* 圓角 */
+
+/* } */ 
+
+/* 「群組 + 選取」時，仍以上方「選取樣式」為主
+   不需再加陰影或描邊，避免與選取樣式打架 */
+.gantt-surgery-item.selected.is-group {
+  box-shadow: #a545ff!important;
+    border-radius: 10px;                    /* 圓角 */
+
+}
+
+
+/* DnD 容器與疊層修正 */
+.surgery-items { display: flex; flex-direction: row; align-items: stretch; }
+.gantt-table, .gantt-row, .surgery-items { transform: none !important; }
+.gantt-row { position: relative; z-index: 0; }
+.gantt-slider-bar { z-index: 50; }
+.surgery-items { display: flex; flex-direction: row; align-items: stretch; overflow: visible; }
+.gantt-row, .gantt-table { transform: none !important; isolation: auto; z-index: 0; }
+
+/* ✅ 避免手術方塊在容器中置中 */
+.surgery-items { justify-content: flex-start; }
+
+.home-filter-toggle-dock--inside {
+  position: absolute;
+  left: 1%;
+  top: 13.5%;
+  z-index: 60;
+  padding-left: 0; /* 可調整：貼齊左邊就設 0 */
+}
+
+/* ===== 主頁：手術本體區塊（一般/群組）垂直置中 ===== */
+.surgery-time {
+  display: flex;
+  flex-direction: column;   /* 垂直堆疊三行 */
+  align-items: center;      /* 水平置中 */
+  justify-content: center;  /* 垂直置中 */
+  text-align: center;
+}
+
+/* 三行字重與可讀性（偏細） */
+.surgery-time .line-1 { font-weight: 500; }
+.surgery-time .line-2 { font-weight: 400; }
+.surgery-time .line-3 { font-weight: 400; font-variant-numeric: tabular-nums; }
+
+/* ===== 主頁：銜接時間區塊垂直置中 ===== */
+.cleaning-time {
+  display: flex;            /* 覆蓋共用規則，確保是 column */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center; 
+  white-space: nowrap;      /* HH:mm - HH:mm 不換行 */
+}
+.cleaning-time .line-1 { font-weight: 500; }
+.cleaning-time .line-2 { font-weight: 400; }
+.cleaning-time .line-3 { font-weight: 400; font-variant-numeric: tabular-nums; }
+
+/* ===== 主頁：字體銳利化與變細（避免發糊）===== */
+.gantt-surgery-item,
+.gantt-surgery-item * {
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;   /* Chrome/Safari */
+  -moz-osx-font-smoothing: grayscale;    /* Firefox / macOS */
+  text-rendering: optimizeLegibility;
+  font-synthesis-weight: none;           /* 避免模擬粗體導致糊 */
+}
+
+/* 若有變淡效果，請只用 opacity，不要用 filter（filter 會讓字糊） */
+.gantt-surgery-item.is-dim {
+  opacity: 0.45;
+  filter: none !important;
+}
+
+/* 可選：主頁三行字級微調，讓層次更清楚（需要就保留） */
+.surgery-time .line-1 { font-size: 13px; }
+.surgery-time .line-2 { font-size: 12px; }
+.surgery-time .line-3 { font-size: 12px; }
+.cleaning-time .line-1,
+.cleaning-time .line-2,
+.cleaning-time .line-3 { font-size: 12px; }

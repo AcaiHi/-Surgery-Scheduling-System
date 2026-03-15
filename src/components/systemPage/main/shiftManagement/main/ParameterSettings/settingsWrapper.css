@@ -1,0 +1,19 @@
+/* 兩欄等寬：1:1 */
+.settings-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)); /* 等寬 */
+  gap: 16px;
+  align-items: start;
+}
+
+/* 讓每一欄內容不被硬擠壓 */
+.settings-col {
+  min-width: 0; /* 允許內部元素正確縮放與省略 */
+}
+
+/* 螢幕太窄時自動改為單欄（可依需要調臨界寬度） */
+@media (max-width: 1000px) {
+  .settings-row {
+    grid-template-columns: 1fr;
+  }
+}

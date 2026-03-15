@@ -1,0 +1,439 @@
+/***** Layer 1. Layout base *****/
+.shift-gantt-wrapper {
+  /* 全域控制：分頁列高度，slider 會跟著讓位 */
+  --tabs-h: 44px;
+
+  width: 98%;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column; /* 切換列在上、內容在下 */
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.gantt-wrapper {
+  /* 父層可由 Gantt.jsx 以 inline style 覆蓋 --timeline-width */
+  --timeline-width: 2400px; /* fallback：未由父層指定時先給一個預設寬 */
+  width: 100%;
+  height: auto;
+  background-color: white;
+  border: 1px solid #ccc;
+  display: flex; /* 讓滑條、time-scale、ganttTable 垂直排 */
+  flex-direction: column;
+  isolation: isolate; /* 確保 z-index 堆疊正確 */
+}
+
+/***** Layer 2. Top tabs (left-aligned underline) *****/
+.tabs-bar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  padding: 0 12px;
+  height: var(--tabs-h);
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb; /* 全寬淺灰底線 */
+}
+
+.tab {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 10px 6px 12px; /* 讓粗底線更貼近字 */
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151; /* gray-700 */
+  cursor: pointer;
+  border-bottom: 3px solid transparent; /* 未啟用為透明 */
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.tab:hover {
+  color: #111827;
+}
+.tab:focus-visible {
+  outline: 2px solid rgba(37, 99, 235, 0.35);
+  outline-offset: 2px;
+}
+.tab.active {
+  color: #1d4ed8; /* blue-700 */
+  border-bottom-color: #1d4ed8; /* 粗藍底線 */
+}
+
+/***** Layer 3. Slider (sits under tabs) *****/
+.gantt-slider-bar {
+  position: sticky;
+  top: var(--tabs-h); /* 關鍵：自動避開分頁列 */
+  z-index: 50;
+  padding: 0px 12px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #fff;
+}
+
+.gantt-slider {
+  --track-h: 4px;
+  --thumb-w: 240px;
+  --thumb-h: 8px;
+  --track: #e0e0e0;
+  --fill: #e0e0e0;
+
+  display: block;
+  width: 100%;
+  height: max(var(--thumb-h), 24px);
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+
+.gantt-slider::-webkit-slider-runnable-track {
+  height: var(--track-h);
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    var(--fill) 0 var(--percent),
+    var(--track) var(--percent) 100%
+  );
+}
+.gantt-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--thumb-w);
+  height: var(--thumb-h);
+  border-radius: 2px;
+  background: #5c5c5c;
+  cursor: pointer;
+  margin-top: calc((var(--track-h) - var(--thumb-h)) / 2);
+}
+.gantt-slider:hover::-webkit-slider-thumb {
+  background: #0b1220;
+}
+.gantt-slider:active::-webkit-slider-thumb {
+  transform: scaleX(1.05);
+}
+.gantt-slider:focus-visible {
+  outline: none;
+}
+.gantt-slider:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.3);
+}
+.gantt-slider:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.3);
+}
+
+/***** Layer 4. Time scale *****/
+.time-scale {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 0;
+  padding: 8px 0 6px; /* 上方留空給文字 */
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+  background: #fafafa;
+  overflow-x: auto; /* 太長可水平捲動 */
+  white-space: nowrap;
+  z-index: 1; /* 低於 slider，避免覆蓋 */
+  scrollbar-gutter: stable both-edges;
+  overscroll-behavior-x: contain;
+}
+.time-scale-track {
+  display: inline-flex;
+  gap: 0;
+  width: var(--timeline-width); /* 軌道 = 統一寬度 */
+}
+
+.tick {
+  position: relative;
+  width: 25px; /* 每 15 分 = 25px */
+  height: 40px;
+  flex: 0 0 25px;
+}
+.tick::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 1px;
+  height: 18px;
+  background: #928787;
+  transform: translateX(-50%);
+}
+.tick--hour::after {
+  height: 24px;
+  background: #111827;
+}
+.tick--midnight::after {
+  background: #ef4444;
+}
+
+.tick-label {
+  position: absolute;
+  bottom: 30px;
+  transform: translateX(-50%);
+  font-size: 16px;
+  line-height: 1;
+  color: #374151;
+  user-select: none;
+  white-space: nowrap;
+}
+.tick--midnight .tick-label {
+  color: #ef4444;
+}
+.tick--midnight ~ .tick .tick-label {
+  color: #1e40af;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+/***** Layer 5. Action list *****/
+.action-list {
+  display: flex;
+  font-size: 1.2rem;
+  padding-left: 15px;
+}
+.pin-icon {
+  width: 2rem;
+  height: 2rem;
+  color: #4b5563;
+}
+.pin-icon-active {
+  color: #dc2626;
+}
+.pin-text {
+  font-size: 1rem;
+  margin-left: 0.25rem;
+}
+.pin-text-active {
+  color: #dc2626;
+}
+
+/***** Layer 6. Gantt table *****/
+/***** Layer 6. Gantt table *****/
+.gantt-table {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 基本列樣式 */
+.gantt-row {
+  display: grid;
+  height: auto;
+  align-items: center;
+  transition: background-color 0.2s ease, border-left-color 0.2s ease;
+  border-left: 4px solid transparent;
+}
+
+/* 讓每列的背景用變數控制，避免與 nth-child 打架 */
+.gantt-table > .gantt-row {
+  --row-bg: #ffffff;               /* 預設白底 */
+  background: var(--row-bg);
+}
+
+/* 斑馬紋：只改變變數，不直接改 background */
+.gantt-table > .gantt-row:nth-child(odd)  { --row-bg: #e1e1e1; }
+.gantt-table > .gantt-row:nth-child(even) { --row-bg: #ffffff; }
+
+/* 釘選列：淡紅底＋左側淡紅指示條（需放在 nth-child 後面） */
+.gantt-table > .gantt-row.pinned {
+  --row-bg: #ff9198;               /* 淡紅底 */
+  border-left-color: #ff5266;      /* 左側淡紅指示條 */
+  box-shadow: inset 0 0 0 1px rgba(244, 63, 94, 0.08);
+}
+
+.surgery-items {
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+.gantt-surgery-item {
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  bottom: 5px;
+}
+.surgery-time,
+.cleaning-time {
+  height: 100%;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+}
+.cleaning-time {
+  color: white;
+}
+
+.surgery-time.normal {
+  background-color: #19ec9f;
+}
+.surgery-time.overtime {
+  background-color: #ebeb0a;
+}
+.surgery-time.overlimit {
+  background-color: #e63030;
+}
+.cleaning-time {
+  background-color: #362de9;
+}
+
+.gantt-surgery-item {
+  border-radius: 8px;
+  overflow: hidden;
+}
+.surgery-time,
+.cleaning-time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* 滾動容器 */
+.gantt-scroll {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: visible;
+  scrollbar-gutter: stable both-edges;
+  z-index: 1; /* 低於 slider */
+  overscroll-behavior-x: contain;
+}
+/* 內層軌道與時間尺同寬 */
+.gantt-track {
+  display: block;
+  width: var(--timeline-width);
+}
+
+/***** Layer 7. Scrollbar visibility *****/
+.time-scale::-webkit-scrollbar {
+  display: none;
+}
+.gantt-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/***** Layer 8. Selection & grouping states *****/
+.gantt-surgery-item.selected .surgery-time {
+  outline: none;
+  box-shadow: none;
+}
+.selection-box {
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.gantt-surgery-item.selected .surgery-time {
+  background-color: #a545ff !important;
+  color: #111 !important;
+        border-radius: 10px;                    /* 圓角 */
+
+}
+.gantt-surgery-item.selected {
+  box-shadow: inset 0 0 0 2px #a545ff,
+    0 1px 3px rgba(0, 0, 0, 0.08);
+      border-radius: 10px;                    /* 圓角 */
+}
+
+.gantt-surgery-item.is-group .surgery-time,
+.gantt-surgery-item.is-group {
+  background-color: #a545ff !important;
+  color: #ffffff !important; /* 想要白字就改 #fff */
+      border-radius: 10px;                    /* 圓角 */
+
+}
+.gantt-surgery-item.selected.is-group {
+  box-shadow: inset 0 0 0 2px #a545ff,
+    0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* 水平 DnD 容器要是水平彈性排版，避免 placeholder 亂跳 */
+.surgery-items {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+/* 確保 DnD 量測不被祖先 transform 影響（有 transform 的祖先會破壞座標） */
+.gantt-table, .gantt-row, .surgery-items {
+  transform: none !important;
+}
+
+/* 避免被 sticky 區塊覆蓋導致 drop 區域無法命中 */
+.gantt-row { position: relative; z-index: 0; }
+.gantt-slider-bar { z-index: 50; } /* 如有 sticky bar */
+
+/* 水平拖曳容器：維持水平排版與可見的溢出 */
+.surgery-items {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  overflow: visible;
+}
+
+/* 盡量避免祖先創建新的 stacking context 影響拖曳層級 */
+.gantt-row, .gantt-table {
+  transform: none !important;
+  isolation: auto; /* 如有需要可關閉奇怪的疊層隔離 */
+  z-index: 0;
+}
+
+/* Cleaning block: vertical stack + centered */
+.cleaning-time {
+  display: flex;              /* 覆蓋共用規則 */
+  flex-direction: column;     /* 垂直排列 */
+  align-items: center;        /* 水平置中 */
+  justify-content: center;    /* 垂直置中 */
+  text-align: center;         /* 文字置中 */
+  white-space: nowrap;        /* HH:mm - HH:mm 不換行 */
+}
+
+.cleaning-time .line-1 { font-weight: 600; }
+.cleaning-time .line-3 { font-variant-numeric: tabular-nums; }
+
+/* ===== 手術本體區：垂直堆疊、置中 ===== */
+.surgery-time {
+  display: flex;             /* 垂直堆疊 */
+  flex-direction: column;
+  align-items: center;       /* 水平置中 */
+  justify-content: center;   /* 垂直置中 */
+  text-align: center;        /* 文字置中 */
+}
+
+/* 群組/一般手術內文三行的基本字重（偏細） */
+.surgery-time .line-1 { font-weight: 500; }
+.surgery-time .line-2 { font-weight: 400; }
+.surgery-time .line-3 { font-weight: 400; font-variant-numeric: tabular-nums; }
+
+/* 清潔區塊已在上一輪做成垂直置中；這裡再確保字更清楚 */
+.cleaning-time {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+}
+.cleaning-time .line-1 { font-weight: 500; }
+.cleaning-time .line-2 { font-weight: 400; }
+.cleaning-time .line-3 { font-weight: 400; font-variant-numeric: tabular-nums; }
+
+/* ===== 字體變細＆抗鋸齒優化（避免糊）===== */
+.gantt-surgery-item,
+.gantt-surgery-item * {
+  font-weight: 400;                 /* 整體偏細 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;   /* 或 geometricPrecision 視覺況調整 */
+  font-synthesis-weight: none;      /* 變體字避免模擬粗重造成糊 */
+}
+
+/* 如果你有把不符合篩選的卡片變淡，盡量用透明度，不要用 filter（會讓字糊） */
+.gantt-surgery-item.is-dim {
+  opacity: 0.45;         /* 只用透明度變淡 */
+  filter: none !important;
+}
+
+
